@@ -1,9 +1,13 @@
 package com.dev.kuntur.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "calificaciones")
 public class Calificacion {
@@ -27,5 +31,8 @@ public class Calificacion {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario cliente;
 
-    // Getters, Setters, Constructores...
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

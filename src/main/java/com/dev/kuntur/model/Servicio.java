@@ -1,11 +1,15 @@
 package com.dev.kuntur.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "servicios")
 public class Servicio {
@@ -36,5 +40,8 @@ public class Servicio {
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Calificacion> calificaciones = new ArrayList<>();
 
-    // Getters, Setters, Constructores...
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }
