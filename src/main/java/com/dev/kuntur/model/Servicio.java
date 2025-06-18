@@ -44,9 +44,9 @@ public class Servicio {
     
     
 
-   /* @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Calificacion> calificaciones = new ArrayList<>();
-*/
+
     public void setId(Long id) {
         this.id = id;
     }

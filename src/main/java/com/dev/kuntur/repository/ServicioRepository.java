@@ -33,26 +33,24 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
     List<Servicio> findTopRated();
 
      */
-<<<<<<< Updated upstream
+
     @Query("SELECT s FROM Servicio s " +
     	       "WHERE s.categoria.id IN (SELECT c.id FROM Categoria c WHERE LOWER(c.nombre) = LOWER(:categoria))")
     	List<Servicio> findByNombreCategoria(@Param("categoria") String categoria);
 
 
-=======
 
-    @Query("SELECT s FROM Servicio s " +
-            "LEFT JOIN FETCH s.categoria " +
-            "LEFT JOIN FETCH s.proveedor " +
-            "LEFT JOIN FETCH s.calificaciones")
+
+    @Query("SELECT s FROM Servicio s LEFT JOIN FETCH s.categoria LEFT JOIN FETCH s.proveedor")
     List<Servicio> findAllWithRelations();
 
     @Query("SELECT s FROM Servicio s " +
             "LEFT JOIN FETCH s.categoria " +
             "LEFT JOIN FETCH s.proveedor " +
-            "LEFT JOIN FETCH s.calificaciones c " +
-            "LEFT JOIN FETCH c.cliente " +
             "WHERE s.id = :id")
     Optional<Servicio> findByIdWithRelations(@Param("id") Long id);
->>>>>>> Stashed changes
+
+    @Query("SELECT s FROM Servicio s JOIN s.categoria c WHERE c.nombre = :nombre")
+    List<Servicio> findByCategoriaNombre(@Param("nombre") String nombre);
+
 }
