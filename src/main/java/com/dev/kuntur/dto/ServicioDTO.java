@@ -1,4 +1,4 @@
-package com.dev.kuntur.dto;
+package com.dev.kuntur.DTO;
 
 import com.dev.kuntur.model.Calificacion;
 import com.dev.kuntur.model.Categoria;

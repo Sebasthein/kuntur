@@ -231,6 +231,13 @@ body {
     margin-right: 12px;
     border: 2px solid var(--accent);
 }
+.action-card {
+    /* Mantén todos tus estilos actuales */
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+    /* Asegúrate de que tenga el mismo aspecto que el botón */
+}
 
 .profile-info {
     flex: 1;

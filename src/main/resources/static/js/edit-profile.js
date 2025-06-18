@@ -2,101 +2,96 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elementos del DOM
     const profileForm = document.getElementById('profileForm');
     const cancelBtn = document.getElementById('cancelBtn');
-    const editAvatarBtn = document.getElementById('editAvatarBtn');
-    const avatarUpload = document.getElementById('avatarUpload');
-    const profileAvatar = document.getElementById('profileAvatar');
+    const confirmationModal = document.getElementById('confirmationModal');
+    const confirmSave = document.getElementById('confirmSave');
+    const confirmCancel = document.getElementById('confirmCancel');
+    const toastNotification = document.getElementById('toastNotification');
     
-    // Datos de ejemplo (simulando datos del usuario)
-    const userData = {
-        firstName: 'Juan',
-        lastName: 'Pérez',
-        email: 'juan.perez@example.com',
-        phone: '+51 987 654 321',
-        bio: 'Desarrollador web apasionado por crear experiencias digitales excepcionales.',
-        avatar: 'img/default-avatar.jpg'
-    };
-    
-    // Cargar datos del usuario en el formulario
-    function loadUserData() {
-        document.getElementById('firstName').value = userData.firstName;
-        document.getElementById('lastName').value = userData.lastName;
-        document.getElementById('email').value = userData.email;
-        document.getElementById('phone').value = userData.phone;
-        document.getElementById('bio').value = userData.bio;
-        profileAvatar.src = userData.avatar;
-    }
-    
-    // Manejar el cambio de avatar
-    editAvatarBtn.addEventListener('click', function() {
-        avatarUpload.click();
-    });
-    
-    avatarUpload.addEventListener('change', function(e) {
-        if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            
-            reader.onload = function(event) {
-                profileAvatar.src = event.target.result;
-                
-                // Aquí podrías agregar la lógica para subir la imagen al servidor
-                console.log('Nueva imagen seleccionada:', e.target.files[0].name);
-            };
-            
-            reader.readAsDataURL(e.target.files[0]);
+    // Event Listeners
+    cancelBtn.addEventListener('click', () => {
+        if (isFormEdited()) {
+            confirmationModal.style.display = 'flex';
+        } else {
+            window.location.href = '/dashboard';
         }
     });
     
-    // Manejar el envío del formulario
+    confirmCancel.addEventListener('click', () => {
+        confirmationModal.style.display = 'none';
+    });
+    
+    confirmSave.addEventListener('click', () => {
+        confirmationModal.style.display = 'none';
+        window.location.href = '/dashboard';
+    });
+    
     profileForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
-        // Obtener valores del formulario
-        const updatedData = {
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            bio: document.getElementById('bio').value,
-            avatar: profileAvatar.src
-        };
-        
-        // Aquí iría la lógica para guardar los datos (AJAX, fetch, etc.)
-        console.log('Datos actualizados:', updatedData);
-        
-        // Simular guardado exitoso
-        showSuccessMessage('Perfil actualizado correctamente');
+        submitForm();
     });
     
-    // Manejar el botón cancelar
-    cancelBtn.addEventListener('click', function() {
-        if (confirm('¿Estás seguro de que deseas descartar los cambios?')) {
-            loadUserData(); // Recargar datos originales
+    // Funciones
+    function isFormEdited() {
+        // Verificar si algún campo ha sido modificado
+        const inputs = profileForm.querySelectorAll('input, textarea');
+        for (let input of inputs) {
+            if (input.defaultValue !== input.value && !input.readOnly) {
+                return true;
+            }
         }
-    });
-    
-    // Mostrar mensaje de éxito
-    function showSuccessMessage(message) {
-        const alert = document.createElement('div');
-        alert.className = 'success-message';
-        alert.innerHTML = `
-            <i class="fas fa-check-circle"></i>
-            <span>${message}</span>
-        `;
-        
-        document.body.appendChild(alert);
-        
-        setTimeout(() => {
-            alert.classList.add('show');
-        }, 10);
-        
-        setTimeout(() => {
-            alert.classList.remove('show');
-            setTimeout(() => {
-                document.body.removeChild(alert);
-            }, 300);
-        }, 3000);
+        return false;
     }
     
-    // Inicializar la vista
-    loadUserData();
+    async function submitForm() {
+        try {
+            // Mostrar estado de carga
+            const saveBtn = profileForm.querySelector('.btn-save');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            
+            // Crear FormData directamente del formulario
+            const formData = new FormData(profileForm);
+            
+            // Enviar datos al servidor
+            const response = await fetch('/profile/edit', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'text/html' // Porque tu endpoint devuelve una redirección
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Error al actualizar perfil');
+            }
+            
+            // Como es una redirección, seguimos la ubicación
+            const redirectUrl = response.url;
+            showToast('Perfil actualizado correctamente', 'success');
+            
+            // Redirigir después de mostrar el toast
+            setTimeout(() => {
+                window.location.href = redirectUrl || '/dashboard';
+            }, 1500);
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('Error al actualizar el perfil: ' + error.message, 'error');
+            
+            // Restaurar botón
+            const saveBtn = profileForm.querySelector('.btn-save');
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar cambios';
+        }
+    }
+    
+    function showToast(message, type = 'success') {
+        toastNotification.textContent = message;
+        toastNotification.className = 'toast ' + type;
+        toastNotification.classList.add('show');
+        
+        setTimeout(() => {
+            toastNotification.classList.remove('show');
+        }, 3000);
+    }
 });

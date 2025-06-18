@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Nuevo Servicio - Kuntur</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> 
+    <link rel="stylesheet" th:href="@{/css/create-service.css}">
+</head>
+<body>
+    <div class="service-container">
+        <div class="service-header">
+            <a th:href="@{/dashboard}" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1>Crear Nuevo Servicio</h1>
+        </div>
+
+        <form id="serviceForm" class="service-form">
+            <div class="form-group">
+                <label for="titulo">Nombre del Servicio*</label>
+                <input type="text" id="titulo" name="titulo" required placeholder="Ej: Diseño de logotipo profesional" maxlength="255">
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">Descripción del Servicio*</label>
+                <textarea id="descripcion" name="descripcion" required rows="5" maxlength="1000"
+                          placeholder="Describe en detalle el servicio que ofreces..."></textarea>
+                <div class="char-counter"><span id="charCount">0</span>/1000 caracteres</div>
+            </div>
+
+            <div class="form-group">
+                <label for="precio">Precio (S/.)*</label>
+                <input type="number" id="precio" name="precio" required placeholder="Ej: 150.00" step="0.01" min="0">
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" id="cancelBtn">Cancelar</button>
+                <button type="submit" class="btn-save">Crear Servicio</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Script para manejar el formulario -->
+    <script th:src="@{/js/create-service.js}"></script>
+</body>
+</html>

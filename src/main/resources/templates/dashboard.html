@@ -35,6 +35,7 @@
                 </div>
                 
                 <div th:if="${user.rol == 'PROVEEDOR'}">
+                
                     <a href="#" class="nav-item" data-section="services">
                         <i class="fas fa-tools"></i>
                         <span>Mis Servicios</span>
@@ -53,14 +54,12 @@
                     <i class="fas fa-envelope"></i>
                     <span>Mensajes</span>
                     <span class="badge">3</span>
-                </a>
-                
-                <a href="#" class="nav-item" data-section="reviews">
-                    <i class="fas fa-star"></i>
-                    <span>Reseñas</span>
-                </a>
-                
-                <a href="#" class="nav-item" data-section="settings">
+                </a> 
+                <a th:href="@{/service/create}" class="nav-item" data-section="services">
+    <i class="fas fa-star"></i>
+    <span>Servicios</span>
+</a> 
+				<a href="#" class="nav-item" data-section="settings">
                     <i class="fas fa-cog"></i>
                     <span>Configuración</span>
                 </a>
@@ -165,12 +164,12 @@
                     </div>
                     
                     <div th:if="${user.rol == 'PROVEEDOR'}">
-                        <button class="action-card" data-action="add-service">
-                            <i class="fas fa-tools"></i>
-                            <span>Agregar servicio</span>
-                        </button>
-                        
-                        <button class="action-card" data-action="manage-schedule">
+						  <a th:href="@{/service/create}" class="action-card">
+        <i class="fas fa-tools"></i>
+        <span>Agregar servicio</span>
+    </a>
+
+						<button class="action-card" data-action="manage-schedule">
                             <i class="fas fa-clock"></i>
                             <span>Gestionar horarios</span>
                         </button>
@@ -180,12 +179,11 @@
                         <i class="fas fa-envelope"></i>
                         <span>Ver mensajes</span>
                     </button>
-                    
-                    <button class="action-card" data-action="profile">
-                        <i class="fas fa-user-edit"></i>
-                        <span>Editar perfil</span>
-                    </button>
-                </div>
+
+					<a href="/profile/edit" class="action-card"> <i
+						class="fas fa-user-edit"></i> <span>Editar perfil</span>
+					</a>
+				</div>
             </section>
 
             <!-- Sección Principal Dinámica -->
@@ -218,10 +216,7 @@
                                     <button class="btn-secondary">
                                         <i class="far fa-heart"></i>
                                     </button>
-                                    <a href="edit-profile.html" class="action-card" data-action="profile">
-    <i class="fas fa-user-edit"></i>
-    <span>Editar perfil</span>
-</a>
+                                    
                                 </div>
                             </div>
                         </div>

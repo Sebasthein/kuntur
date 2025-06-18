@@ -1,6 +1,22 @@
 package com.dev.kuntur.controller;
 
-import com.dev.kuntur.dto.ServicioDTO;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.dev.kuntur.DTO.ServicioDTO;
 import com.dev.kuntur.model.Categoria;
 import com.dev.kuntur.model.Servicio;
 import com.dev.kuntur.model.Usuario;
@@ -8,14 +24,6 @@ import com.dev.kuntur.repository.CategoriaRepository;
 import com.dev.kuntur.repository.ServicioRepository;
 import com.dev.kuntur.repository.UsuarioRepository;
 import com.dev.kuntur.service.ServicioService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/servicios")
