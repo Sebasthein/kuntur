@@ -41,5 +41,12 @@ public class ServicioController {
     public void deleteServicio(@PathVariable Long id) {
         servicioRepository.deleteById(id);
     }
+    
+    
+    @GetMapping("/categoria/{categoria}")
+    public List<Servicio> getServicioByCategoria(@PathVariable String categoria) {
+        return servicioRepository.findByNombreCategoria(categoria);
+    }
+    
 }
 

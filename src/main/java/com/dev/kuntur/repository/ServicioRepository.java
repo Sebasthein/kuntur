@@ -32,4 +32,9 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
     List<Servicio> findTopRated();
 
      */
+    @Query("SELECT s FROM Servicio s " +
+    	       "WHERE s.categoria.id IN (SELECT c.id FROM Categoria c WHERE LOWER(c.nombre) = LOWER(:categoria))")
+    	List<Servicio> findByNombreCategoria(@Param("categoria") String categoria);
+
+
 }
