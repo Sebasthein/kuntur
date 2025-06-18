@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil | Kuntur</title>
+    <link rel="stylesheet" href="css/edit-profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="profile-edit-container">
+        <div class="profile-header">
+            <div class="profile-avatar-container">
+                <img src="img/default-avatar.jpg" alt="Avatar" class="profile-avatar" id="profileAvatar">
+                <button class="avatar-edit-btn" id="editAvatarBtn">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+            </div>
+            <h1>Editar Perfil</h1>
+        </div>
+
+        <form id="profileForm" class="profile-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">Nombres</label>
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="firstName" placeholder="Ingresa tus nombres" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Apellidos</label>
+                    <div class="input-group">
+                        <i class="fas fa-user-tag input-icon"></i>
+                        <input type="text" id="lastName" placeholder="Ingresa tus apellidos" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="email" placeholder="Ingresa tu correo electrónico" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Teléfono</label>
+                <div class="input-group">
+                    <i class="fas fa-phone input-icon"></i>
+                    <input type="tel" id="phone" placeholder="Ingresa tu teléfono">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bio">Biografía</label>
+                <textarea id="bio" placeholder="Cuéntanos algo sobre ti..." rows="4"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" id="cancelBtn">Cancelar</button>
+                <button type="submit" class="btn-save">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/edit-profile.js"></script>
+</body>
+</html>

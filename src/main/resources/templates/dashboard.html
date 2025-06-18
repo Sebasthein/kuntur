@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Kuntur</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="/images/logo-kuntur.png" alt="Logo Kuntur" class="logo">
+                <h2>Kuntur</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                
+                <div th:if="${user.rol == T(com.dev.kuntur.model.Usuario.Rol).CLIENTE}">
+                    <a href="#" class="nav-item" data-section="providers">
+                        <i class="fas fa-hands-helping"></i>
+                        <span>Proveedores</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="bookings">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Mis Reservas</span>
+                    </a>
+                </div>
+                
+                <div th:if="${user.rol == 'PROVEEDOR'}">
+                    <a href="#" class="nav-item" data-section="services">
+                        <i class="fas fa-tools"></i>
+                        <span>Mis Servicios</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="requests">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Solicitudes</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="schedule">
+                        <i class="fas fa-clock"></i>
+                        <span>Horarios</span>
+                    </a>
+                </div>
+                
+                <a href="#" class="nav-item" data-section="messages">
+                    <i class="fas fa-envelope"></i>
+                    <span>Mensajes</span>
+                    <span class="badge">3</span>
+                </a>
+                
+                <a href="#" class="nav-item" data-section="reviews">
+                    <i class="fas fa-star"></i>
+                    <span>Reseñas</span>
+                </a>
+                
+                <a href="#" class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Configuración</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                 <!-- <img th:src="${user.imageUrl ?: '/images/default-avatar.png'}" alt="Foto de perfil" class="profile-img"> -->
+                    <div class="profile-info">
+                        <span class="profile-name" th:text="${user.nombre}"></span>
+                        <span class="profile-role" th:text="${user.rol}"></span>
+                    </div>
+                </div>
+                <a href="/logout" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1 th:text="'Hola, ' + ${user.nombre} + '!'"></h1>
+                    <p class="welcome-message">Bienvenido a tu panel de control</p>
+                </div>
+                <div class="header-right">
+                    <div class="notification">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">5</span>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn-icon" title="Buscar">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="btn-icon" title="Ayuda">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Sección de Estadísticas -->
+            <section class="stats-section" th:if="${user.rol == 'PROVEEDOR'}">
+                <div class="stats-grid">
+                    <div class="stat-card primary">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>45</h3>
+                            <p>Solicitudes este mes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card success">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>4.8</h3>
+                            <p>Calificación promedio</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Pendientes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card accent">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>S/. 3,450</h3>
+                            <p>Ganancias este mes</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Acciones Rápidas -->
+            <section class="quick-actions-section">
+                <h2 class="section-title">Acciones rápidas</h2>
+                <div class="actions-grid">
+                    <div th:if="${user.rol == 'CLIENTE'}">
+                        <button class="action-card" data-action="search-providers">
+                            <i class="fas fa-search"></i>
+                            <span>Buscar proveedores</span>
+                        </button>
+                        
+                        <button class="action-card" data-action="new-booking">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Nueva reserva</span>
+                        </button>
+                    </div>
+                    
+                    <div th:if="${user.rol == 'PROVEEDOR'}">
+                        <button class="action-card" data-action="add-service">
+                            <i class="fas fa-tools"></i>
+                            <span>Agregar servicio</span>
+                        </button>
+                        
+                        <button class="action-card" data-action="manage-schedule">
+                            <i class="fas fa-clock"></i>
+                            <span>Gestionar horarios</span>
+                        </button>
+                    </div>
+                    
+                    <button class="action-card" data-action="messages">
+                        <i class="fas fa-envelope"></i>
+                        <span>Ver mensajes</span>
+                    </button>
+                    
+                    <button class="action-card" data-action="profile">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Editar perfil</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Sección Principal Dinámica -->
+            <section class="main-section">
+                <!-- Contenido dinámico según el rol -->
+                <div th:if="${user.rol == 'CLIENTE'}" class="client-content">
+                    <div class="section-header">
+                        <h2 class="section-title">Proveedores recomendados</h2>
+                        <a href="#" class="view-all">Ver todos</a>
+                    </div>
+                    
+                    <div class="providers-grid">
+                        <!-- Proveedor 1 -->
+                        <div class="provider-card">
+                            <div class="provider-badge">Recomendado</div>
+                            <img src="/images/proveedor1.jpg" alt="Proveedor" class="provider-image">
+                            <div class="provider-content">
+                                <h3>Servicios de Construcción SAC</h3>
+                                <div class="provider-meta">
+                                    <span class="location">
+                                        <i class="fas fa-map-marker-alt"></i> Lima
+                                    </span>
+                                    <span class="rating">
+                                        <i class="fas fa-star"></i> 4.8
+                                    </span>
+                                </div>
+                                <p class="provider-description">Especialistas en construcción y remodelación de viviendas.</p>
+                                <div class="provider-actions">
+                                    <button class="btn-primary">Reservar</button>
+                                    <button class="btn-secondary">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <a href="edit-profile.html" class="action-card" data-action="profile">
+    <i class="fas fa-user-edit"></i>
+    <span>Editar perfil</span>
+</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Proveedor 2 -->
+                        <div class="provider-card">
+                            <img src="/images/proveedor2.jpg" alt="Proveedor" class="provider-image">
+                            <div class="provider-content">
+                                <h3>Limpieza Total</h3>
+                                <div class="provider-meta">
+                                    <span class="location">
+                                        <i class="fas fa-map-marker-alt"></i> Arequipa
+                                    </span>
+                                    <span class="rating">
+                                        <i class="fas fa-star"></i> 4.9
+                                    </span>
+                                </div>
+                                <p class="provider-description">Limpieza profesional para hogares y oficinas.</p>
+                                <div class="provider-actions">
+                                    <button class="btn-primary">Reservar</button>
+                                    <button class="btn-secondary">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-header">
+                        <h2 class="section-title">Tus reservas recientes</h2>
+                        <a href="#" class="view-all">Ver historial</a>
+                    </div>
+                    
+                    <div class="bookings-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Proveedor</th>
+                                    <th>Servicio</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="booking-provider">
+                                            <img src="/images/proveedor3.jpg" alt="Proveedor">
+                                            <span>Electricista Pro</span>
+                                        </div>
+                                    </td>
+                                    <td>Reparación eléctrica</td>
+                                    <td>15 Jun, 2023</td>
+                                    <td><span class="status-badge completed">Completado</span></td>
+                                    <td>
+                                        <button class="btn-icon" title="Ver detalles">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon" title="Calificar">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="booking-provider">
+                                            <img src="/images/proveedor4.jpg" alt="Proveedor">
+                                            <span>Plomería Express</span>
+                                        </div>
+                                    </td>
+                                    <td>Reparación de tuberías</td>
+                                    <td>20 Jun, 2023</td>
+                                    <td><span class="status-badge pending">Pendiente</span></td>
+                                    <td>
+                                        <button class="btn-icon" title="Ver detalles">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon" title="Cancelar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div th:if="${user.rol == 'PROVEEDOR'}" class="provider-content">
+                    <div class="section-header">
+                        <h2 class="section-title">Solicitudes recientes</h2>
+                        <a href="#" class="view-all">Ver todas</a>
+                    </div>
+                    
+                    <div class="requests-grid">
+                        <!-- Solicitud 1 -->
+                        <div class="request-card">
+                            <div class="request-header">
+                                <div class="client-info">
+                                    <img src="/images/cliente1.jpg" alt="Cliente">
+                                    <div>
+                                        <h4>María González</h4>
+                                        <span class="request-date">Hoy, 10:30 AM</span>
+                                    </div>
+                                </div>
+                                <span class="status-badge pending">Pendiente</span>
+                            </div>
+                            <div class="request-body">
+                                <p><strong>Servicio:</strong> Reparación de tubería en cocina</p>
+                                <p><strong>Fecha solicitada:</strong> 25 Jun, 2023 - 2:00 PM</p>
+                                <p><strong>Ubicación:</strong> Av. Lima 123, Miraflores</p>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn-primary">Aceptar</button>
+                                <button class="btn-outline">Rechazar</button>
+                                <button class="btn-text">Ver detalles</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Solicitud 2 -->
+                        <div class="request-card">
+                            <div class="request-header">
+                                <div class="client-info">
+                                    <img src="/images/cliente2.jpg" alt="Cliente">
+                                    <div>
+                                        <h4>Carlos Mendoza</h4>
+                                        <span class="request-date">Ayer, 4:15 PM</span>
+                                    </div>
+                                </div>
+                                <span class="status-badge confirmed">Confirmado</span>
+                            </div>
+                            <div class="request-body">
+                                <p><strong>Servicio:</strong> Instalación eléctrica</p>
+                                <p><strong>Fecha solicitada:</strong> 28 Jun, 2023 - 9:00 AM</p>
+                                <p><strong>Ubicación:</strong> Calle Los Pinos 456, Surco</p>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn-outline">Reprogramar</button>
+                                <button class="btn-text">Ver detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-header">
+                        <h2 class="section-title">Tus servicios</h2>
+                        <a href="#" class="view-all">Gestionar servicios</a>
+                    </div>
+                    
+                    <div class="services-grid">
+                        <!-- Servicio 1 -->
+                        <div class="service-card">
+                            <div class="service-header">
+                                <h3>Reparaciones eléctricas</h3>
+                                <span class="price">S/. 120</span>
+                            </div>
+                            <p class="service-description">Reparación e instalación de sistemas eléctricos residenciales.</p>
+                            <div class="service-stats">
+                                <span><i class="fas fa-star"></i> 4.9 (24)</span>
+                                <span><i class="fas fa-calendar-alt"></i> 15/mes</span>
+                            </div>
+                            <div class="service-actions">
+                                <button class="btn-icon" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon" title="Ver reseñas">
+                                    <i class="fas fa-comment-alt"></i>
+                                </button>
+                                <button class="btn-icon" title="Promocionar">
+                                    <i class="fas fa-bullhorn"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Servicio 2 -->
+                        <div class="service-card">
+                            <div class="service-header">
+                                <h3>Instalación de paneles</h3>
+                                <span class="price">S/. 350</span>
+                            </div>
+                            <p class="service-description">Instalación profesional de paneles solares para hogares.</p>
+                            <div class="service-stats">
+                                <span><i class="fas fa-star"></i> 4.7 (12)</span>
+                                <span><i class="fas fa-calendar-alt"></i> 5/mes</span>
+                            </div>
+                            <div class="service-actions">
+                                <button class="btn-icon" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon" title="Ver reseñas">
+                                    <i class="fas fa-comment-alt"></i>
+                                </button>
+                                <button class="btn-icon" title="Promocionar">
+                                    <i class="fas fa-bullhorn"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

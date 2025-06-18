@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | Kuntur</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/registro.css">
+</head>
+<body>
+    <div class="register-wrapper">
+        <div class="register-container">
+            <div class="register-header">
+                <img src="/images/logo-kuntur.png" alt="Logo Kuntur" class="logo-image">
+                <h1>Crear tu cuenta</h1>
+                <p>Únete a nuestra comunidad</p>
+            </div>
+
+            <form id="registerForm" class="register-form" action="/registro" method="POST">
+                <!-- Mostrar errores del servidor -->
+                <div th:if="${error}" class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span th:text="${error}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre">Nombre completo <span class="required">*</span></label>
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="nombre" name="nombre" required 
+                               th:value="${registroRequest?.nombre}" 
+                               placeholder="Ingresa tu nombre completo">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo electrónico <span class="required">*</span></label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="email" name="email" required
+                               th:value="${registroRequest?.email}"
+                               placeholder="tucorreo@ejemplo.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña <span class="required">*</span></label>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="password" name="password" required
+                               placeholder="Mínimo 8 caracteres">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Contraseña <span class="required">*</span></label>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required
+                               placeholder="Repite tu contraseña">
+                    </div>
+                    <div id="passwordMatchError" class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono <span class="required">*</span></label>
+                    <div class="input-group">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" id="telefono" name="telefono" required
+                               th:value="${registroRequest?.telefono}"
+                               placeholder="+51 123 456 789">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Dirección <span class="required">*</span></label>
+                    <div class="input-group">
+                        <i class="fas fa-map-marker-alt input-icon"></i>
+                        <input type="text" id="direccion" name="direccion" required
+                               th:value="${registroRequest?.direccion}"
+                               placeholder="Tu dirección">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción (opcional)</label>
+                    <textarea id="descripcion" name="descripcion" rows="3"
+                              th:text="${registroRequest?.descripcion}"
+                              placeholder="Cuéntanos sobre ti..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de usuario <span class="required">*</span></label>
+                    <div class="role-selector">
+                        <div class="role-option">
+                            <input type="radio" id="cliente" name="rol" value="CLIENTE" 
+                                   th:checked="${registroRequest?.rol == 'CLIENTE'}" required>
+                            <label for="cliente">
+                                <i class="fas fa-user-tie"></i>
+                                <span>Soy Cliente</span>
+                                <p>Quiero contratar servicios</p>
+                            </label>
+                        </div>
+                        <div class="role-option">
+                            <input type="radio" id="proveedor" name="rol" value="PROVEEDOR"
+                                   th:checked="${registroRequest?.rol == 'PROVEEDOR'}">
+                            <label for="proveedor">
+                                <i class="fas fa-tools"></i>
+                                <span>Soy Proveedor</span>
+                                <p>Ofrezco servicios profesionales</p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-register">
+                    <span>Registrarse</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+
+                <div class="login-link">
+                    ¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/registro.js"></script>
+</body>
+</html>
