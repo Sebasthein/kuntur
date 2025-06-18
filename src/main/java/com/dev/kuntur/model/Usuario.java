@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Getter
 @Setter
 @Entity
@@ -39,7 +41,9 @@ public class Usuario {
     private Rol rol;
 
     @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("usuario-servicios") 
     private List<Servicio> servicios = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Calificacion> calificaciones = new ArrayList<>();

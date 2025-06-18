@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Getter
 @Setter
 @Entity
@@ -22,9 +25,12 @@ public class Categoria {
 
     private String descripcion;
 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    /*@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    @Basic(fetch = FetchType.EAGER)
     private List<Servicio> servicios = new ArrayList<>();
+     */
 
+    
     public void setId(Long id) {
         this.id = id;
     }

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ServicioRepository extends JpaRepository<Servicio, Long> {
@@ -32,4 +33,24 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
     List<Servicio> findTopRated();
 
      */
+
+    @Query("SELECT s FROM Servicio s " +
+    	       "WHERE s.categoria.id IN (SELECT c.id FROM Categoria c WHERE LOWER(c.nombre) = LOWER(:categoria))")
+    	List<Servicio> findByNombreCategoria(@Param("categoria") String categoria);
+
+
+
+
+    @Query("SELECT s FROM Servicio s LEFT JOIN FETCH s.categoria LEFT JOIN FETCH s.proveedor")
+    List<Servicio> findAllWithRelations();
+
+    @Query("SELECT s FROM Servicio s " +
+            "LEFT JOIN FETCH s.categoria " +
+            "LEFT JOIN FETCH s.proveedor " +
+            "WHERE s.id = :id")
+    Optional<Servicio> findByIdWithRelations(@Param("id") Long id);
+
+    @Query("SELECT s FROM Servicio s JOIN s.categoria c WHERE c.nombre = :nombre")
+    List<Servicio> findByCategoriaNombre(@Param("nombre") String nombre);
+
 }

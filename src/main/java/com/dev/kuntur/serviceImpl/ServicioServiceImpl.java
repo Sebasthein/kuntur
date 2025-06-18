@@ -3,6 +3,7 @@ package com.dev.kuntur.serviceImpl;
 import com.dev.kuntur.model.Servicio;
 import com.dev.kuntur.repository.ServicioRepository;
 import com.dev.kuntur.service.ServicioService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,15 @@ public class ServicioServiceImpl implements ServicioService {
     private ServicioRepository servicioRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Servicio> obtenerTodos() {
-        return servicioRepository.findAll();
+        return servicioRepository.findAllWithRelations();
     }
 
     @Override
-    public Servicio obtenerPorId(Long id) {
-        return servicioRepository.findById(id).orElse(null);
+    @Transactional(readOnly = true)
+    public Optional<Servicio> obtenerPorId(Long id) {
+        return servicioRepository.findByIdWithRelations(id);
     }
 
     @Override
@@ -42,6 +45,17 @@ public class ServicioServiceImpl implements ServicioService {
     @Override
     public void eliminar(Long id) {
         servicioRepository.deleteById(id);
+    }
+
+    // Usa la anotación de Spring con readOnly
+    @Transactional(readOnly = true)
+    public List<Servicio> findAll() {
+        return servicioRepository.findAllWithRelations();
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Servicio> findById(Long id) {
+        return servicioRepository.findByIdWithRelations(id);
     }
 }
 
