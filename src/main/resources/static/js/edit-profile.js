@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmSave = document.getElementById('confirmSave');
     const confirmCancel = document.getElementById('confirmCancel');
     const toastNotification = document.getElementById('toastNotification');
+    const fileInput = document.getElementById('foto');
+    const removePhotoBtn = document.getElementById('removePhotoBtn');
+    const photoPreview = document.querySelector('.current-photo');
+    
+    // Estado inicial
+    let originalPhotoSrc = photoPreview.src;
+    let formEdited = false;
     
     // Event Listeners
     cancelBtn.addEventListener('click', () => {
@@ -30,6 +37,22 @@ document.addEventListener('DOMContentLoaded', function() {
         submitForm();
     });
     
+    fileInput.addEventListener('change', function(e) {
+        handleImageUpload(e);
+    });
+    
+    removePhotoBtn.addEventListener('click', function() {
+        removeSelectedImage();
+    });
+    
+    // Escuchar cambios en los inputs
+    const inputs = profileForm.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            formEdited = true;
+        });
+    });
+    
     // Funciones
     function isFormEdited() {
         // Verificar si algún campo ha sido modificado
@@ -39,6 +62,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 return true;
             }
         }
+        
+        // Verificar si se ha seleccionado una nueva imagen
+        if (fileInput.files.length > 0) {
+            return true;
+        }
+        
         return false;
     }
     
@@ -85,6 +114,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        // Validar tipo de archivo
+        if (!file.type.match('image.*')) {
+            showToast('Por favor, selecciona una imagen válida (JPEG, PNG)', 'error');
+            event.target.value = '';
+            return;
+        }
+        
+        // Validar tamaño de archivo (2MB máximo)
+        if (file.size > 2 * 1024 * 1024) {
+            showToast('La imagen no debe superar los 2MB', 'error');
+            event.target.value = '';
+            return;
+        }
+        
+        // Mostrar previsualización
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            photoPreview.src = e.target.result;
+            formEdited = true;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    function removeSelectedImage() {
+        fileInput.value = '';
+        photoPreview.src = originalPhotoSrc;
+        formEdited = true;
+        showToast('Imagen eliminada', 'success');
+    }
+    
     function showToast(message, type = 'success') {
         toastNotification.textContent = message;
         toastNotification.className = 'toast ' + type;
@@ -94,4 +157,11 @@ document.addEventListener('DOMContentLoaded', function() {
             toastNotification.classList.remove('show');
         }, 3000);
     }
+    
+    // Cerrar modal al hacer clic fuera del contenido
+    confirmationModal.addEventListener('click', (e) => {
+        if (e.target === confirmationModal) {
+            confirmationModal.style.display = 'none';
+        }
+    });
 });

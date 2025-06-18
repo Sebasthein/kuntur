@@ -1,5 +1,8 @@
 package com.dev.kuntur.controller;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dev.kuntur.DTO.RegistroRequest;
 import com.dev.kuntur.model.Servicio;
@@ -26,6 +30,7 @@ import com.dev.kuntur.service.UsuarioService;
 @Controller
 public class ViewController {
 	
+	private final String uploadDir = "src/main/resources/static/images/uploads";
 	   @Autowired
 	    private UsuarioRepository usuarioRepository;
 	   
@@ -95,26 +100,49 @@ public class ViewController {
         model.addAttribute("usuario", usuario);
         return "edit-profile";
     }
+    
     @PostMapping("/profile/edit")
-    public String actualizarPerfil(Usuario usuario, Model model, Principal principal) {
-        if (principal == null) {
-            return "redirect:/login";
+    public String actualizarPerfil(
+            @RequestParam("nombre") String nombre,
+            @RequestParam("telefono") String telefono,
+            @RequestParam("direccion") String direccion,
+            @RequestParam("descripcion") String descripcion,
+            @RequestParam("foto") MultipartFile foto,
+            Principal principal,
+            Model model) {
+
+        // Obtener usuario autenticado
+        Usuario usuario = usuarioRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        // Actualizar campos
+        usuario.setNombre(nombre);
+        usuario.setTelefono(telefono);
+        usuario.setDireccion(direccion);
+        usuario.setDescripcion(descripcion);
+
+        // Manejar la carga de la imagen
+        if (!foto.isEmpty()) {
+            try {
+                // Generar nombre único para evitar duplicados
+                String fileName = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
+                Path path = Paths.get(uploadDir + "/" + fileName);
+
+                // Guardar archivo
+                foto.transferTo(path);
+
+                // Actualizar campo de fotoPerfil con la ruta relativa
+                usuario.setFotoPerfil("/images/uploads/" + fileName);
+
+            } catch (IOException e) {
+                model.addAttribute("error", "Error al subir la imagen");
+                model.addAttribute("usuario", usuario);
+                return "edit-profile";
+            }
         }
 
-        // Obtener el usuario actual desde la base de datos
-        Optional<Usuario> optionalUser = usuarioRepository.findByEmail(principal.getName());
-
-        if (optionalUser.isPresent()) {
-            Usuario userDB = optionalUser.get();
-
-            // Actualizar campos permitidos
-            userDB.setNombre(usuario.getNombre());
-            userDB.setTelefono(usuario.getTelefono());
-            userDB.setDireccion(usuario.getDireccion());
-            userDB.setDescripcion(usuario.getDescripcion());
-
-            usuarioRepository.save(userDB);
-        }
+        // Guardar cambios en la BD
+        usuarioRepository.save(usuario);
 
         return "redirect:/dashboard";
     }

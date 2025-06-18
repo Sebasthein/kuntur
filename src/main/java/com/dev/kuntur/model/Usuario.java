@@ -34,6 +34,8 @@ public class Usuario {
 
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro = LocalDateTime.now();
+    @Column(name = "foto_perfil")
+    private String fotoPerfil; // Guardará la ruta relativa de la imagen, ej: "/images/uploads/john.jpg"
 
 
     @Enumerated(EnumType.STRING)

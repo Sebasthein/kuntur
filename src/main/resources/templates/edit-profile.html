@@ -8,15 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="profile-edit-container">
-        <div class="profile-header">
-            <a href="/dashboard" class="back-button">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1>Editar Perfil</h1>
-        </div>
 
-       <div class="profile-edit-container">
+<div class="profile-edit-container">
     <div class="profile-header">
         <a href="/dashboard" class="back-button">
             <i class="fas fa-arrow-left"></i>
@@ -25,13 +18,37 @@
     </div>
 
     <div class="profile-content">
-        <form th:action="@{/profile/edit}" th:object="${usuario}" method="post" class="profile-form" id="profileForm">
+        <form th:action="@{/profile/edit}" th:object="${usuario}" method="post" class="profile-form" id="profileForm" enctype="multipart/form-data">
+            <!-- Sección para subir imagen -->
+            <div class="form-group photo-upload">
+                <label>Foto de perfil</label>
+                <div class="photo-preview-container">
+                    <!-- Muestra la imagen actual si existe -->
+                    <img th:if="${usuario.fotoPerfil}" th:src="@{${usuario.fotoPerfil}}" 
+                         alt="Foto actual" class="current-photo">
+                    <img th:unless="${usuario.fotoPerfil}" src="/images/default-profile.png" 
+                         alt="Foto por defecto" class="current-photo">
+                    
+                    <!-- Controles para subir nueva imagen -->
+                    <div class="upload-controls">
+                        <label for="foto" class="upload-btn">
+                            <i class="fas fa-camera"></i> Cambiar foto
+                        </label>
+                        <input type="file" id="foto" name="foto" accept="image/*" 
+                               style="display: none;" onchange="previewImage(this)">
+                        <button type="button" class="remove-btn" id="removePhotoBtn">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-grid">
                 <div class="form-group">
                     <label for="nombre">Nombre completo</label>
                     <div class="input-container">
                         <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required 
-                               placeholder="Ingresa tu nombre completo" value="prueba1">
+                               placeholder="Ingresa tu nombre completo">
                     </div>
                 </div>
 
@@ -39,7 +56,7 @@
                     <label for="email">Correo electrónico</label>
                     <div class="input-container">
                         <input type="email" id="email" th:field="*{email}" class="form-control" readonly 
-                               placeholder="tu@email.com" value="prueba1@gmail.com">
+                               placeholder="tu@email.com">
                     </div>
                 </div>
 
@@ -47,7 +64,7 @@
                     <label for="telefono">Teléfono</label>
                     <div class="input-container">
                         <input type="tel" id="telefono" th:field="*{telefono}" class="form-control" 
-                               placeholder="+51 123 456 789" value="1234567892">
+                               placeholder="+51 123 456 789">
                     </div>
                 </div>
 
@@ -55,7 +72,7 @@
                     <label for="direccion">Dirección</label>
                     <div class="input-container">
                         <input type="text" id="direccion" th:field="*{direccion}" class="form-control" 
-                               placeholder="Ingresa tu dirección" value="calle32">
+                               placeholder="Ingresa tu dirección">
                     </div>
                 </div>
 
@@ -63,7 +80,7 @@
                     <label for="descripcion">Descripción</label>
                     <div class="input-container">
                         <textarea id="descripcion" th:field="*{descripcion}" rows="4" class="form-control" 
-                                  placeholder="Cuéntanos algo sobre ti...">fdafasfadsfasd</textarea>
+                                  placeholder="Cuéntanos algo sobre ti..."></textarea>
                     </div>
                 </div>
             </div>
@@ -76,22 +93,21 @@
     </div>
 </div>
 
-        <!-- Modal de confirmación -->
-        <div class="modal" id="confirmationModal">
-            <div class="modal-content">
-                <h3>¿Descartar cambios?</h3>
-                <p>Tienes cambios sin guardar. ¿Estás seguro de que quieres descartarlos?</p>
-                <div class="modal-actions">
-                    <button class="btn-secondary" id="confirmCancel">Continuar editando</button>
-                    <button class="btn-primary" id="confirmSave">Descartar cambios</button>
-                </div>
-            </div>
+<!-- Modal de confirmación -->
+<div class="modal" id="confirmationModal">
+    <div class="modal-content">
+        <h3>¿Descartar cambios?</h3>
+        <p>Tienes cambios sin guardar. ¿Estás seguro de que quieres descartarlos?</p>
+        <div class="modal-actions">
+            <button class="btn-secondary" id="confirmCancel">Continuar editando</button>
+            <button class="btn-primary" id="confirmSave">Descartar cambios</button>
         </div>
-
-        <!-- Toast notification -->
-        <div class="toast" id="toastNotification"></div>
     </div>
+</div>
 
-    <script th:src="@{/js/edit-profile.js}"></script>
+<!-- Toast notification -->
+<div class="toast" id="toastNotification"></div>
+
+<script th:src="@{/js/edit-profile.js}"></script>
 </body>
 </html>

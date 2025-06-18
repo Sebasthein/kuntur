@@ -36,6 +36,7 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
 /* Encabezado */
 .profile-header {
     display: flex;
@@ -101,6 +102,7 @@ label {
     color: #333;
     font-size: 14px;
 }
+
 .input-container {
     width: 100%;
 }
@@ -136,6 +138,74 @@ label {
 textarea.form-control {
     min-height: 120px;
     resize: vertical;
+}
+
+/* Estilos para la subida de fotos */
+.photo-upload {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.photo-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.current-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.upload-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.upload-btn, .remove-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    font-weight: 600;
+    border: none;
+}
+
+.upload-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.upload-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.remove-btn {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.remove-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.file-input {
+    display: none;
 }
 
 /* Botones */
@@ -296,8 +366,19 @@ textarea.form-control {
     .form-control {
         padding: 14px 16px;
     }
+    
     .btn-save, .btn-cancel {
         width: 100%;
+    }
+    
+    .upload-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .upload-btn, .remove-btn {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -307,6 +388,11 @@ textarea.form-control {
     }
     
     .form-control {
-        padding: 10px 15px 10px 40px;
+        padding: 10px 15px;
+    }
+    
+    .current-photo {
+        width: 120px;
+        height: 120px;
     }
 }

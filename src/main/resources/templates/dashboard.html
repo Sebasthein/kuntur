@@ -6,7 +6,7 @@
     <title>Dashboard | Kuntur</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 </head>
 <body>
     <div class="dashboard-container">
@@ -16,13 +16,14 @@
                 <img src="/images/logo-kuntur.png" alt="Logo Kuntur" class="logo">
                 <h2>Kuntur</h2>
             </div>
-            
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-section="dashboard">
+                <!-- Menú común para ambos roles -->
+                <a href="#" class="nav-item active" data-section="dashboard"> 
                     <i class="fas fa-home"></i>
                     <span>Inicio</span>
                 </a>
-                
+
+                <!-- ========== SECCIÓN EXCLUSIVA PARA CLIENTES ========== -->
                 <div th:if="${user.rol == T(com.dev.kuntur.model.Usuario.Rol).CLIENTE}">
                     <a href="#" class="nav-item" data-section="providers">
                         <i class="fas fa-hands-helping"></i>
@@ -33,9 +34,10 @@
                         <span>Mis Reservas</span>
                     </a>
                 </div>
-                
+                <!-- ========== FIN SECCIÓN CLIENTES ========== -->
+
+                <!-- ========== SECCIÓN EXCLUSIVA PARA PROVEEDORES ========== -->
                 <div th:if="${user.rol == 'PROVEEDOR'}">
-                
                     <a href="#" class="nav-item" data-section="services">
                         <i class="fas fa-tools"></i>
                         <span>Mis Servicios</span>
@@ -49,30 +51,44 @@
                         <span>Horarios</span>
                     </a>
                 </div>
-                
+                <!-- ========== FIN SECCIÓN PROVEEDORES ========== -->
+
+                <!-- Menú común para ambos roles -->
                 <a href="#" class="nav-item" data-section="messages">
                     <i class="fas fa-envelope"></i>
                     <span>Mensajes</span>
                     <span class="badge">3</span>
-                </a> 
+                </a>
+
                 <a th:href="@{/service/create}" class="nav-item" data-section="services">
-    <i class="fas fa-star"></i>
-    <span>Servicios</span>
-</a> 
-				<a href="#" class="nav-item" data-section="settings">
+                    <i class="fas fa-star"></i>
+                    <span>Servicios</span>
+                </a>
+
+                <a href="#" class="nav-item" data-section="settings">
                     <i class="fas fa-cog"></i>
                     <span>Configuración</span>
                 </a>
             </nav>
-            
+
+            <!-- ========== PERFIL DEL USUARIO EN EL SIDEBAR ========== -->
             <div class="sidebar-footer">
                 <div class="user-profile">
-                 <!-- <img th:src="${user.imageUrl ?: '/images/default-avatar.png'}" alt="Foto de perfil" class="profile-img"> -->
+                    <!-- Mostrar foto de perfil -->
+                  <!--   <img 
+                        th:src="${user.fotoPerfil != null ? user.fotoPerfil : '/images/default-avatar.png'}"
+                        alt="Foto de perfil"
+                        class="profile-img"
+                    /> -->
+
+                    <!-- Información del usuario -->
                     <div class="profile-info">
                         <span class="profile-name" th:text="${user.nombre}"></span>
                         <span class="profile-role" th:text="${user.rol}"></span>
                     </div>
                 </div>
+
+                <!-- Botón de cierre de sesión -->
                 <a href="/logout" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
@@ -83,8 +99,17 @@
         <main class="main-content">
             <header class="main-header">
                 <div class="header-left">
-                    <h1 th:text="'Hola, ' + ${user.nombre} + '!'"></h1>
-                    <p class="welcome-message">Bienvenido a tu panel de control</p>
+                    <div class="welcome-container">
+                        <img 
+                            th:src="${user.fotoPerfil != null ? user.fotoPerfil : '/images/default-avatar.png'}"
+                            alt="Foto de perfil"
+                            class="welcome-profile-img"
+                        />
+                        <div>
+                            <h1 th:text="'Hola, ' + ${user.nombre} + '!'"></h1>
+                            <p class="welcome-message">Bienvenido a tu panel de control</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="header-right">
                     <div class="notification">
@@ -102,7 +127,7 @@
                 </div>
             </header>
 
-            <!-- Sección de Estadísticas -->
+            <!-- ========== SECCIÓN DE ESTADÍSTICAS (SOLO PROVEEDOR) ========== -->
             <section class="stats-section" th:if="${user.rol == 'PROVEEDOR'}">
                 <div class="stats-grid">
                     <div class="stat-card primary">
@@ -114,7 +139,6 @@
                             <p>Solicitudes este mes</p>
                         </div>
                     </div>
-                    
                     <div class="stat-card success">
                         <div class="stat-icon">
                             <i class="fas fa-star"></i>
@@ -124,7 +148,6 @@
                             <p>Calificación promedio</p>
                         </div>
                     </div>
-                    
                     <div class="stat-card warning">
                         <div class="stat-icon">
                             <i class="fas fa-clock"></i>
@@ -134,7 +157,6 @@
                             <p>Pendientes</p>
                         </div>
                     </div>
-                    
                     <div class="stat-card accent">
                         <div class="stat-icon">
                             <i class="fas fa-dollar-sign"></i>
@@ -146,55 +168,59 @@
                     </div>
                 </div>
             </section>
+            <!-- ========== FIN SECCIÓN ESTADÍSTICAS ========== -->
 
             <!-- Sección de Acciones Rápidas -->
             <section class="quick-actions-section">
                 <h2 class="section-title">Acciones rápidas</h2>
                 <div class="actions-grid">
+
+                    <!-- ========== ACCIONES PARA CLIENTES ========== -->
                     <div th:if="${user.rol == 'CLIENTE'}">
                         <button class="action-card" data-action="search-providers">
                             <i class="fas fa-search"></i>
                             <span>Buscar proveedores</span>
                         </button>
-                        
                         <button class="action-card" data-action="new-booking">
                             <i class="fas fa-plus-circle"></i>
                             <span>Nueva reserva</span>
                         </button>
                     </div>
-                    
-                    <div th:if="${user.rol == 'PROVEEDOR'}">
-						  <a th:href="@{/service/create}" class="action-card">
-        <i class="fas fa-tools"></i>
-        <span>Agregar servicio</span>
-    </a>
+                    <!-- ========== FIN ACCIONES CLIENTES ========== -->
 
-						<button class="action-card" data-action="manage-schedule">
+                    <!-- ========== ACCIONES PARA PROVEEDORES ========== -->
+                    <div th:if="${user.rol == 'PROVEEDOR'}">
+                        <a th:href="@{/service/create}" class="action-card">
+                            <i class="fas fa-tools"></i>
+                            <span>Agregar servicio</span>
+                        </a>
+                        <button class="action-card" data-action="manage-schedule">
                             <i class="fas fa-clock"></i>
                             <span>Gestionar horarios</span>
                         </button>
                     </div>
-                    
+                    <!-- ========== FIN ACCIONES PROVEEDORES ========== -->
+
+                    <!-- Acción común para ambos roles -->
                     <button class="action-card" data-action="messages">
                         <i class="fas fa-envelope"></i>
                         <span>Ver mensajes</span>
                     </button>
-
-					<a href="/profile/edit" class="action-card"> <i
-						class="fas fa-user-edit"></i> <span>Editar perfil</span>
-					</a>
-				</div>
+                    <a href="/profile/edit" class="action-card">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Editar perfil</span>
+                    </a>
+                </div>
             </section>
 
             <!-- Sección Principal Dinámica -->
             <section class="main-section">
-                <!-- Contenido dinámico según el rol -->
+                <!-- ========== CONTENIDO PARA CLIENTES ========== -->
                 <div th:if="${user.rol == 'CLIENTE'}" class="client-content">
                     <div class="section-header">
                         <h2 class="section-title">Proveedores recomendados</h2>
                         <a href="#" class="view-all">Ver todos</a>
                     </div>
-                    
                     <div class="providers-grid">
                         <!-- Proveedor 1 -->
                         <div class="provider-card">
@@ -216,11 +242,9 @@
                                     <button class="btn-secondary">
                                         <i class="far fa-heart"></i>
                                     </button>
-                                    
                                 </div>
                             </div>
                         </div>
-                        
                         <!-- Proveedor 2 -->
                         <div class="provider-card">
                             <img src="/images/proveedor2.jpg" alt="Proveedor" class="provider-image">
@@ -244,12 +268,10 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="section-header">
                         <h2 class="section-title">Tus reservas recientes</h2>
                         <a href="#" class="view-all">Ver historial</a>
                     </div>
-                    
                     <div class="bookings-table">
                         <table>
                             <thead>
@@ -304,13 +326,14 @@
                         </table>
                     </div>
                 </div>
-                
+                <!-- ========== FIN CONTENIDO CLIENTES ========== -->
+
+                <!-- ========== CONTENIDO PARA PROVEEDORES ========== -->
                 <div th:if="${user.rol == 'PROVEEDOR'}" class="provider-content">
                     <div class="section-header">
                         <h2 class="section-title">Solicitudes recientes</h2>
                         <a href="#" class="view-all">Ver todas</a>
                     </div>
-                    
                     <div class="requests-grid">
                         <!-- Solicitud 1 -->
                         <div class="request-card">
@@ -335,7 +358,6 @@
                                 <button class="btn-text">Ver detalles</button>
                             </div>
                         </div>
-                        
                         <!-- Solicitud 2 -->
                         <div class="request-card">
                             <div class="request-header">
@@ -359,12 +381,10 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="section-header">
                         <h2 class="section-title">Tus servicios</h2>
                         <a href="#" class="view-all">Gestionar servicios</a>
                     </div>
-                    
                     <div class="services-grid">
                         <!-- Servicio 1 -->
                         <div class="service-card">
@@ -389,7 +409,6 @@
                                 </button>
                             </div>
                         </div>
-                        
                         <!-- Servicio 2 -->
                         <div class="service-card">
                             <div class="service-header">
@@ -415,10 +434,12 @@
                         </div>
                     </div>
                 </div>
+                <!-- ========== FIN CONTENIDO PROVEEDORES ========== -->
             </section>
         </main>
     </div>
 
-    <script src="/js/dashboard.js"></script>
+    <!-- Script -->
+    <script th:src="@{/js/dashboard.js}"></script>
 </body>
 </html>
