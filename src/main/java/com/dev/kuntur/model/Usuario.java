@@ -44,6 +44,7 @@ public class Usuario {
     @JsonManagedReference("usuario-servicios") 
     private List<Servicio> servicios = new ArrayList<>();
 
+
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Calificacion> calificaciones = new ArrayList<>();
 

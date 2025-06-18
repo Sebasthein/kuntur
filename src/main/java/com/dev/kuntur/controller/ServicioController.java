@@ -1,12 +1,17 @@
 package com.dev.kuntur.controller;
 
+import com.dev.kuntur.dto.ServicioDTO;
 import com.dev.kuntur.model.Servicio;
 import com.dev.kuntur.repository.ServicioRepository;
+import com.dev.kuntur.service.ServicioService;
+import com.dev.kuntur.serviceImpl.ServicioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/servicios")
@@ -15,11 +20,19 @@ public class ServicioController {
 
     @Autowired
     private ServicioRepository servicioRepository;
+    @Autowired
+    private ServicioService servicioService;
 
     @GetMapping
-    public List<Servicio> getAllServicios() {
-        return servicioRepository.findAll();
+    public ResponseEntity<List<ServicioDTO>> getAllServicios() {
+        List<Servicio> servicios = servicioService.obtenerTodos();
+        List<ServicioDTO> dtos = servicios.stream()
+                .map(ServicioDTO::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
     }
+
 
     @GetMapping("/{id}")
     public Optional<Servicio> getServicioById(@PathVariable Long id) {

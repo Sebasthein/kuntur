@@ -3,6 +3,7 @@ package com.dev.kuntur.serviceImpl;
 import com.dev.kuntur.model.Servicio;
 import com.dev.kuntur.repository.ServicioRepository;
 import com.dev.kuntur.service.ServicioService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,18 @@ public class ServicioServiceImpl implements ServicioService {
     @Override
     public void eliminar(Long id) {
         servicioRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Servicio> findAll() {
+        // Usamos JOIN FETCH para evitar LazyInitializationException
+        return servicioRepository.findAllWithRelations();
+    }
+
+    @Transactional()
+    public Optional<Servicio> findById(Long id) {
+        // Carga explícita de relaciones
+        return servicioRepository.findByIdWithRelations(id);
     }
 }
 
